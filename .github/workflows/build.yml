@@ -3,32 +3,19 @@ name: Build APK
 on:
   push:
     branches: [ main ]
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   build:
-    # Change from ubuntu-latest to 22.04 to find older build dependencies
     runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          # Updated libtinfo and libncurses to version 6 for better compatibility
-          # Added build-essential and python3-dev which are often required for Kivy
-          sudo apt-get install -y \
-            libtinfo6 \
-            libncurses6 \
-            libncursesw6 \
-            unzip zip \
-            openjdk-17-jdk \
-            build-essential \
-            python3-dev
-
       - name: Build with Buildozer
+        # This action handles the dependencies and permissions internally
         uses: HookyQR/buildozer-action@v1.5.0
         with:
           command: buildozer android debug
