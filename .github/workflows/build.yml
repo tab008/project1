@@ -20,6 +20,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          # 1. Fix the "broken packages" issue by removing conflicting libunwind
+          sudo apt-get remove -y libunwind-*
+          
+          # 2. Update and install required build tools
           sudo apt-get update
           sudo apt-get install -y \
             build-essential \
@@ -57,12 +61,13 @@ jobs:
       - name: Install Buildozer and Cython
         run: |
           pip install --upgrade pip
+          # Buildozer works best with Cython 0.29.33 for Kivy 2.3.0
           pip install buildozer cython==0.29.33 setuptools
 
       - name: Build with Buildozer
         run: |
-          # Use 'yes' to automatically accept Android SDK licenses
-          yes | buildozer android debug
+          # Using --v (verbose) helps see exactly where it fails if it stops
+          yes | buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
