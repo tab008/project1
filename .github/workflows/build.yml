@@ -3,6 +3,7 @@ name: Build APK
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -10,7 +11,8 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
@@ -27,13 +29,15 @@ jobs:
             python3-dev
 
       - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
+        uses: HookyQR/buildozer-action@v1.5.0
         with:
           command: buildozer android debug
           buildozer_version: master
+          python_version: 3.11
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: apk
+          name: kanpur-depot-apk
           path: bin/*.apk
+          
