@@ -6,7 +6,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Change from ubuntu-latest to 22.04 to find older build dependencies
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -14,12 +15,16 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
+          # Updated libtinfo and libncurses to version 6 for better compatibility
+          # Added build-essential and python3-dev which are often required for Kivy
           sudo apt-get install -y \
-            libtinfo5 \
-            libncurses5 \
-            libncursesw5 \
+            libtinfo6 \
+            libncurses6 \
+            libncursesw6 \
             unzip zip \
-            openjdk-11-jdk
+            openjdk-17-jdk \
+            build-essential \
+            python3-dev
 
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
